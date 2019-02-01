@@ -1,0 +1,22 @@
+<h1>Angular HMR Lazy Components</h1>
+<p>
+  Out-of-the-box Angular HMR reloads lazy routes, but this example shows how it can be used to reload lazy
+  (dynamically-loaded) components.
+</p>
+<p>
+  <em>Instructions:</em>
+</p>
+<ul>
+  <li>Hit F12 to open the Chrome Dev Tools. Open the Console, so you can see HMR messages.</li>
+  <li>Click on a mixture of the "Add" buttons below.  A "loading" graphic simulates the component loading its data.</li>
+  <li>Click on any open component to close it.</li>
+  <li>With a mixture of components open, make a change to the source code in a.component.ts. Only the instances of
+    component A will be hot-reloaded. Component A is in one module, and Components B1 and B2 are in a different module.</li>
+  <li>Try something similar with b1.component.ts - all B1 and B2s will refresh, because they're part of the same
+    module.</li>
+</ul>
+<button (click)="loadA()">Add Component A</button>&nbsp;
+<button (click)="loadB1()">Add Component B1</button>&nbsp;
+<button (click)="loadB2()">Add Component B2</button>
+<p></p>
+<div #componentOutlet></div>
