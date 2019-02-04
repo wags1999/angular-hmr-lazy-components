@@ -1,6 +1,7 @@
 # angular-hmr-lazy-components
 Out-of-the-box Angular HMR reloads lazy routes, but this example shows how it can be used to reload lazy (dynamically-loaded) components. This can be extremely helpful for large Angular apps that take a while to JIT compile when they reload.
 
+Notice in the animation below that moments after a change is made in the a.component.ts source code, just the "A" components already showing in the app are reloaded. 
 ![Image of example in action](https://github.com/wags1999/angular-hmr-lazy-components/blob/master/img/example.gif)
 
 # How It Works
