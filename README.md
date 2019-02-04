@@ -42,4 +42,5 @@ Besides the above files, there are a few other things to point out:
       ],
 
 # Remarks
-Because the DynamicComponentsService uses the components' selectors, all of the dynamic loading works in a Prod (AOT) build.
+* Because the DynamicComponentsService uses the components' selectors, all of the dynamic loading works in a Prod (AOT) build.
+* You can't run this example on StackBlitz, as it doesn't seem to honor the lazyModules setting in the angular.json file.
