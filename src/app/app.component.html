@@ -1,8 +1,9 @@
 <h1>Angular HMR Lazy Components</h1>
 <p>
-  Out-of-the-box Angular HMR reloads lazy routes, but this example shows how it can be used to reload lazy
+  This example shows how Angular HMR can be used to reload lazy routes and lazy
   (dynamically-loaded) components.
 </p>
+<h2>Lazy-Loaded Dynamic Components Example: </h2>
 <p>
   <em>Instructions:</em>
 </p>
@@ -15,8 +16,21 @@
   <li>Try something similar with b1.component.ts - all B1 and B2s will refresh, because they're part of the same
     module.</li>
 </ul>
+ 
 <button (click)="loadA()">Add Component A</button>&nbsp;
 <button (click)="loadB1()">Add Component B1</button>&nbsp;
 <button (click)="loadB2()">Add Component B2</button>
 <p></p>
 <div #componentOutlet></div>
+ 
+<h2>Lazy-Loaded Routes Example: </h2>
+<p>
+  <em>Instructions:</em>
+</p>
+<ul>
+  <li>Click on the link below to navigate to the lazy route C. A component with a "C" in it will appear below the link, where the router-outlet is.</li>
+  <li>Make a change to the source code in c.component.ts. The router will reset and reload the route, showing the updated
+    component.</li>
+</ul>
+<a routerLink="/c">Click me to navigate to the lazy route C</a>
+<router-outlet></router-outlet>

@@ -3,33 +3,27 @@ import { ComponentSelectors } from '../../component-selectors';
 import { DynamicComponentsService } from '../../dynamic-components.service';
 
 @Component({
-  selector: ComponentSelectors.B2Component,
+  selector: 'my-c',
   template: `
-<div class="lazy-component" (click)="closeMe()">
+<div class="lazy-component">
   <ng-container *ngIf="loading">
     <img src="assets/loading.gif" class="loadingImage">
   </ng-container>
   {{content}}
 </div>
 `,
-styleUrls: [ '../../lazy.component.css', './b2.component.css' ]
+styleUrls: [ '../../lazy.component.css', './c.component.css' ]
 })
-export class B2Component  {
+export class CComponent  {
   loading: boolean = true;
   content: string;
-
-  constructor(
-    private dynamicComponentSvc: DynamicComponentsService
-  ) {}
 
   ngOnInit() {
     setTimeout(() => {
       this.loading = false;
-      this.content = 'B2';
+      this.content = 'C';
+      //uncomment this next line to see this component dynamically reload
+      //this.content = 'C1'
     },3000)
-  }
-
-  closeMe() {
-    this.dynamicComponentSvc.closeComponent(this);
   }
 }

@@ -12,7 +12,7 @@ import { DynamicComponentsService } from '../../dynamic-components.service';
   {{content}}
 </div>
 `,
-styleUrls: [ '../lazy.component.css', './a.component.css' ]
+styleUrls: [ '../../lazy.component.css', './a.component.css' ]
 })
 export class AComponent  {
   loading: boolean = true;

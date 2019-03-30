@@ -2,7 +2,7 @@ import { NgModule, NgModuleRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { AComponent } from './a.component';
-import { HmrModuleHelper } from '../hmr-module-helper';
+import { HmrModuleHelper } from '../../hmr-module-helper';
 
 @NgModule({
   imports: [CommonModule],
@@ -11,7 +11,7 @@ import { HmrModuleHelper } from '../hmr-module-helper';
 })
 export class AModule {
   constructor(moduleRef: NgModuleRef<AModule>) {
-    HmrModuleHelper.enableHmrNgModule(module, moduleRef);
+    HmrModuleHelper.enableHmrDynamicNgModule(module, moduleRef);
   }
 }
 
