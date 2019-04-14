@@ -88,12 +88,24 @@ export class HmrModuleHelper {
         //only add a Dispose handler if this environment supports hmr and we haven't already created a disposeHandler
         if (environment.hmr && (<any>nodeModuleRef).hot._disposeHandlers.length == 0) {
             
+            let compiler = moduleRef.injector.get(Compiler);
             let zone = moduleRef.injector.get(NgZone);
             let router = moduleRef.injector.get(Router);
  
             (<any>nodeModuleRef).hot.addDisposeHandler(() => {
                 try {
                     zone.run(() => {
+                        //get the metadata for this module
+                        let metaData: NgModule = ((compiler as any)._metadataResolver._ngModuleResolver as NgModuleResolver).resolve((<any>moduleRef)._moduleType);
+
+                        //clear the Angular cache that knows about this component, so its reloaded
+                        for (let declarations of metaData.declarations) {
+                            let dec = <Type<any>>declarations;
+                            compiler.clearCacheFor(dec);
+                        }
+
+                        compiler.clearCacheFor((<any>moduleRef)._moduleType);
+
                         //tell the router to reset its config - this causes it to purge the previously loaded module
                         router.resetConfig(appRoutes);
  
