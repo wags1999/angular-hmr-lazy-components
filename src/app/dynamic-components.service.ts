@@ -23,11 +23,12 @@ export class DynamicComponentsService {
         return this.loader
             .load(request.modulePath)
             .then((moduleFactory) => {
-                const componentFactoryResolver = moduleFactory.create(this.injector).componentFactoryResolver;
+                const module = moduleFactory.create(this.injector);
+                const componentFactoryResolver = module.componentFactoryResolver;
                 const factoryClass = this.getFactoryClass(componentFactoryResolver, request.selectorName);
                 if (!factoryClass) throw new Error(`Unrecognized component name: ${request.selectorName}`);
                 const componentFactory = componentFactoryResolver.resolveComponentFactory(factoryClass);
-                const componentRef = request.outlet.createComponent(componentFactory, request.index, this.injector);
+                const componentRef = request.outlet.createComponent(componentFactory, request.index, module.injector);
                 this.openComponents.set(componentRef, request);
             })
             .catch(err => {
