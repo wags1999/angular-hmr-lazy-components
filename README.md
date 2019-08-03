@@ -4,6 +4,11 @@ This example shows how Angular HMR can be used to automatically reload lazy rout
 Notice in the animation below that moments after a change is made in the a.component.ts source code, just the "A" components already showing in the app are reloaded. 
 ![Image of example in action](https://github.com/wags1999/angular-hmr-lazy-components/blob/master/img/example.gif)
 
+# Running the Example App
+
+      npm install
+      npm start
+
 # Reloading Lazy Routes
 
 ## How It Works
