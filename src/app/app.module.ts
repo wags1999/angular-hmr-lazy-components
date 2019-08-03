@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { DynamicComponentsService } from './dynamic-components.service';
 
 export const appRoutes: Routes = [
-  { path: 'c', loadChildren: 'src/app/lazy-routes/c/c.module#CModule' }
+  { path: 'c', loadChildren: () => import('src/app/lazy-routes/c/c.module').then(m => m.CModule) }
 ];
 
 @NgModule({
