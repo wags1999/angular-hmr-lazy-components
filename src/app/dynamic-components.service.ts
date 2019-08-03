@@ -1,12 +1,16 @@
-import { NgModuleFactoryLoader, Injector, ViewContainerRef, ComponentFactoryResolver, Type, Injectable, ComponentRef, ElementRef } from "@angular/core";
+import { NgModuleFactoryLoader, Injector, ViewContainerRef, ComponentFactoryResolver, Type, Injectable, ComponentRef, Compiler, NgModuleFactory, ɵisObservable as isObservable, ɵisPromise as isPromise } from "@angular/core";
 import { ComponentSelectors } from "./component-selectors";
+import { LoadChildren } from '@angular/router';
+import { Observable, from, of } from 'rxjs';
+import { mergeMap, map } from 'rxjs/operators';
 
 @Injectable()
 export class DynamicComponentsService {
 
     constructor(
         private loader: NgModuleFactoryLoader,
-        private injector: Injector
+        private injector: Injector,
+        private compiler: Compiler,
     ) { }
 
     /** 
@@ -19,22 +23,71 @@ export class DynamicComponentsService {
      * Dynamically create an Angular component using an NgModuleFactoryLoader
      * @param request Contains the info required to dynamically load an Angular component
      */
-    public createComponent(request: CreateComponentRequest): Promise<void> {
-        return this.loader
-            .load(request.modulePath)
-            .then((moduleFactory) => {
-                const module = moduleFactory.create(this.injector);
-                const componentFactoryResolver = module.componentFactoryResolver;
-                const factoryClass = this.getFactoryClass(componentFactoryResolver, request.selectorName);
-                if (!factoryClass) throw new Error(`Unrecognized component name: ${request.selectorName}`);
-                const componentFactory = componentFactoryResolver.resolveComponentFactory(factoryClass);
-                const componentRef = request.outlet.createComponent(componentFactory, request.index, module.injector);
-                this.openComponents.set(componentRef, request);
-            })
-            .catch(err => {
-                throw err;
-            });
+    public createComponent(request: CreateComponentRequest): void {
+        
+//code concepts copied from https://github.com/angular/angular/blob/1e9eeafa9e3fbfad5e94d697b8079cf649db626e/packages/router/src/router_config_loader.ts
+
+        //return this.compiler.compileModuleAsync(
+        //    Promise.resolve((<any>request.module)())
+        //    ).then((moduleFactory) => {
+
+        const moduleFactory$ = this.loadModuleFactory(request.module !);
+        const obs =  moduleFactory$.pipe(map((factory: NgModuleFactory<any>) => {
+            const module = factory.create(this.injector);
+            const componentFactoryResolver = module.componentFactoryResolver;
+            const factoryClass = this.getFactoryClass(componentFactoryResolver, request.selectorName);
+            if (!factoryClass) throw new Error(`Unrecognized component name: ${request.selectorName}`);
+            const componentFactory = componentFactoryResolver.resolveComponentFactory(factoryClass);
+            const componentRef = request.outlet.createComponent(componentFactory, request.index, module.injector);
+            this.openComponents.set(componentRef, request);
+        }));
+
+        obs.subscribe();
+        
+        //return this.loader
+        //    .load(request.modulePath)
+        //    .then((moduleFactory) => {
+        //        const module = moduleFactory.create(this.injector);
+        //        const componentFactoryResolver = module.componentFactoryResolver;
+        //        const factoryClass = this.getFactoryClass(componentFactoryResolver, request.selectorName);
+        //        if (!factoryClass) throw new Error(`Unrecognized component name: ${request.selectorName}`);
+        //        const componentFactory = componentFactoryResolver.resolveComponentFactory(factoryClass);
+        //        const componentRef = request.outlet.createComponent(componentFactory, request.index, module.injector);
+        //        this.openComponents.set(componentRef, request);
+        //    })
+        //    .catch(err => {
+        //        throw err;
+        //    });
     }
+
+    private loadModuleFactory(loadChildren: LoadChildren): Observable<NgModuleFactory<any>> {
+        if (typeof loadChildren === 'string') {
+          return from(this.loader.load(loadChildren));
+        } else {
+          return this.wrapIntoObservable(loadChildren()).pipe(mergeMap((t: any) => {
+            if (t instanceof NgModuleFactory) {
+              return of (t);
+            } else {
+              return from(this.compiler.compileModuleAsync(t));
+            }
+          }));
+        }
+      }
+
+      private wrapIntoObservable<T>(value: T | NgModuleFactory<T>| Promise<T>| Observable<T>) {
+        if (isObservable(value)) {
+          return value;
+        }
+      
+        if (isPromise(value)) {
+          // Use `Promise.resolve()` to wrap promise-like instances.
+          // Required ie when a Resolver returns a AngularJS `$q` promise to correctly trigger the
+          // change detection.
+          return from(Promise.resolve(value));
+        }
+      
+        return of (value);
+      }
 
     /**
     * Given an ComponentFactoryResolver, returns the Type that has the given selector.  
@@ -91,7 +144,7 @@ export class DynamicComponentsService {
 }
 
 export interface CreateComponentRequest {
-    modulePath: string;
+    module: LoadChildren;
     selectorName: ComponentSelectors;
     outlet: ViewContainerRef;
     index?: number;

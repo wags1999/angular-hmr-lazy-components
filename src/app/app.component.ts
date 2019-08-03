@@ -17,7 +17,7 @@ export class AppComponent {
 
   loadA() {
     this.dynamicComponentSvc.createComponent({
-      modulePath:'src/app/lazy-components/a/a.module#AModule', 
+      module: () => import('src/app/lazy-components/a/a.module').then(mod => mod.AModule),
       selectorName: ComponentSelectors.AComponent, 
       outlet: this.outlet
     });
@@ -25,7 +25,7 @@ export class AppComponent {
 
   loadB1() { 
     this.dynamicComponentSvc.createComponent({
-      modulePath:'src/app/lazy-components/b/b.module#BModule', 
+      module: () => import('src/app/lazy-components/b/b.module').then(mod => mod.BModule), 
       selectorName: ComponentSelectors.B1Component, 
       outlet: this.outlet
     });
@@ -33,7 +33,7 @@ export class AppComponent {
   
   loadB2() { 
     this.dynamicComponentSvc.createComponent({
-      modulePath:'src/app/lazy-components/b/b.module#BModule', 
+      module: () => import('src/app/lazy-components/b/b.module').then(mod => mod.BModule),
       selectorName: ComponentSelectors.B2Component, 
       outlet: this.outlet
     });
