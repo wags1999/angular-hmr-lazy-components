@@ -13,7 +13,7 @@ export class AppComponent {
     private dynamicComponentSvc: DynamicComponentsService
   ) {}
 
-  @ViewChild('componentOutlet', { read: ViewContainerRef, static: false }) outlet: ViewContainerRef;
+  @ViewChild('componentOutlet', { read: ViewContainerRef }) outlet: ViewContainerRef;
 
   loadA() {
     this.dynamicComponentSvc.createComponent({
