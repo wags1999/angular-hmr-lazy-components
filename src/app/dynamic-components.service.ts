@@ -24,13 +24,7 @@ export class DynamicComponentsService {
      * @param request Contains the info required to dynamically load an Angular component
      */
     public createComponent(request: CreateComponentRequest): void {
-        
-//code concepts copied from https://github.com/angular/angular/blob/1e9eeafa9e3fbfad5e94d697b8079cf649db626e/packages/router/src/router_config_loader.ts
-
-        //return this.compiler.compileModuleAsync(
-        //    Promise.resolve((<any>request.module)())
-        //    ).then((moduleFactory) => {
-
+        //code concepts copied from https://github.com/angular/angular/blob/1e9eeafa9e3fbfad5e94d697b8079cf649db626e/packages/router/src/router_config_loader.ts
         const moduleFactory$ = this.loadModuleFactory(request.module !);
         const obs =  moduleFactory$.pipe(map((factory: NgModuleFactory<any>) => {
             const module = factory.create(this.injector);
@@ -43,21 +37,6 @@ export class DynamicComponentsService {
         }));
 
         obs.subscribe();
-        
-        //return this.loader
-        //    .load(request.modulePath)
-        //    .then((moduleFactory) => {
-        //        const module = moduleFactory.create(this.injector);
-        //        const componentFactoryResolver = module.componentFactoryResolver;
-        //        const factoryClass = this.getFactoryClass(componentFactoryResolver, request.selectorName);
-        //        if (!factoryClass) throw new Error(`Unrecognized component name: ${request.selectorName}`);
-        //        const componentFactory = componentFactoryResolver.resolveComponentFactory(factoryClass);
-        //        const componentRef = request.outlet.createComponent(componentFactory, request.index, module.injector);
-        //        this.openComponents.set(componentRef, request);
-        //    })
-        //    .catch(err => {
-        //        throw err;
-        //    });
     }
 
     private loadModuleFactory(loadChildren: LoadChildren): Observable<NgModuleFactory<any>> {
