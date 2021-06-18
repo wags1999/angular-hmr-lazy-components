@@ -1,3 +1,6 @@
+# simulation of upstream changes
+test
+
 # angular-hmr-lazy-components
 This example shows how Angular HMR can be used to automatically reload lazy routes and lazy (dynamically-loaded) components. This can be extremely helpful for large Angular apps that take a while to JIT compile when they reload.
 
