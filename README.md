@@ -1,4 +1,4 @@
-# simulation of upstream changes
+# simulation of more upstream changes
 test
 
 # angular-hmr-lazy-components
